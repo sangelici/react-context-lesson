@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-import { addItemToCart, removeItemFromCart, filterItemFromCart, getCartItemsCount } from './cart.utils';
+import { addItemToCart, removeItemFromCart, filterItemFromCart, getCartItemsCount, getCartTotal } from './cart.utils';
 
 export const CartContext = createContext({
     hidden: true,
@@ -9,7 +9,8 @@ export const CartContext = createContext({
     addItem:  () => {},
     removeItem: () => {},
     clearItemFromCart: () => {},
-    cartItemsCount: 0
+    cartItemsCount: 0,
+    cartTotal: 0
 });
 
 // children are the components that will be wrapped
@@ -17,6 +18,7 @@ const CartProvider = ({ children }) => {
     const [hidden, setHidden] = useState(true);
     const [cartItems, setCartItems] = useState([]);
     const [cartItemsCount, setCartItemsCount] = useState(0);
+    const [cartTotal, setCartTotal] = useState(0);
 
 
     const addItem = item => setCartItems(addItemToCart(cartItems, item))
@@ -25,7 +27,8 @@ const CartProvider = ({ children }) => {
     const toggleHidden = () => setHidden(!hidden);
 
     useEffect(() => {
-        setCartItemsCount(getCartItemsCount(cartItems))
+        setCartItemsCount(getCartItemsCount(cartItems));
+        setCartTotal(getCartTotal(cartItems));
     }, [cartItems])
 
     return(
@@ -40,7 +43,8 @@ const CartProvider = ({ children }) => {
                 addItem,
                 removeItem,
                 clearItemFromCart,
-                cartItemsCount
+                cartItemsCount,
+                cartTotal
             }}
         >
             {children}
